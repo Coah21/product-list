@@ -37,9 +37,7 @@ const Header = () => {
           <div className="flex items-center gap-6">
             {/* Language Selector */}
             <div className="flex items-center gap-2">
-              <div className="w-8 h-8 bg-red-600 rounded-full flex items-center justify-center">
-                <span className="text-yellow-300 text-sm font-bold">★</span>
-              </div>
+              <img src="./icon-vietnam.svg" alt="" />
               <span className="text-gray-700 font-medium">VI</span>
             </div>
 
