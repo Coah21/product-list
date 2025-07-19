@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useEffect, useState } from "react";
 
 interface ProductFilterProps {
   onSortChange: (sortBy: string) => void;
@@ -7,7 +7,6 @@ interface ProductFilterProps {
 
 const ProductFilter = ({
   onSortChange,
-  onFilterChange,
 }: ProductFilterProps) => {
   const [activeSort, setActiveSort] = useState("relevant");
   const [showPriceDropdown, setShowPriceDropdown] = useState(false);
@@ -41,8 +40,8 @@ const ProductFilter = ({
   };
 
   // Close dropdown when clicking outside
-  React.useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
+  useEffect(() => {
+    const handleClickOutside = () => {
       if (showPriceDropdown) {
         setShowPriceDropdown(false);
       }
@@ -58,15 +57,8 @@ const ProductFilter = ({
     <div className="">
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between py-4">
-          {/* Left side - Title */}
-          {/* <div className="flex items-center gap-4">
-            <h1 className="text-xl font-semibold text-gray-900">Danh sách sản phẩm</h1>
-            <span className="text-gray-500 text-sm">Sắp xếp theo</span>
-          </div> */}
-
           {/* Right side - Sort Buttons */}
           <div className="flex items-center gap-2">
-            {/* Liên quan Button */}
             <button
               onClick={() => handleSortClick("relevant")}
               className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 border ${

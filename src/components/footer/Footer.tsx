@@ -1,11 +1,4 @@
 const Footer = () => {
-  const scrollToTop = () => {
-    window.scrollTo({
-      top: 0,
-      behavior: "smooth",
-    });
-  };
-
   return (
     <footer className="bg-gray-100">
       {/* Main Footer Content */}

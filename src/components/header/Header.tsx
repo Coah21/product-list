@@ -4,17 +4,13 @@ const Header = () => {
   return (
     <>
       {/* Main Header */}
-      <header className="bg-white">
+      <header className="bg-white py-2">
         <div className="container mx-auto flex items-center justify-between">
           {/* Logo Section */}
           <div className="flex items-center">
             <img
-              src="./image/logo.png"
+              src="./image/logo_sunfil1.png"
               className="h-auto w-auto"
-              style={{
-                clipPath: "inset(8px 20px 20px 14px)", // Crop viền oval
-                transform: "scale(1)", // Phóng to một chút
-              }}
             />
           </div>
 

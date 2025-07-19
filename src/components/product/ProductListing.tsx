@@ -4,7 +4,6 @@ import { sampleProducts } from "../../data/sampleProducts";
 import type { Product } from "../../types/Product";
 import FilterSidebar from "../filter/FilterSideBar";
 import ProductFilter from "./ProductFilter";
-
 type ProductListingProps = {
   onSortChange: () => void;
   onFilterChange: () => void;

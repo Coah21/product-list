@@ -41,7 +41,7 @@ const ProductCard = ({ product, onQuickBuy }: ProductCardProps) => {
           </div>
         )}
         {/* Product Name */}
-        <h3 className="font-medium text-sm mb-3 leading-5 line-clamp-2">
+        <h3 className="font-medium text-sm mb-3 leading-5 line-clamp-2 min-h-[40px]">
           {product.name}
         </h3>
 

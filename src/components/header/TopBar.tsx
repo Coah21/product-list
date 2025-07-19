@@ -10,7 +10,7 @@ const TopBar = () => (
           lần đầu mua hàng.
         </span>
       </div>
-      <div className="flex flex-row items-center gap-4">
+      <div className="flex flex-row items-center gap-6">
         <div className="flex flex-row items-center gap-2">
           <img src="./call-topbar.svg" alt="" />
           <span>
