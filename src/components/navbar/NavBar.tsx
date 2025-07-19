@@ -1,13 +1,35 @@
+import { useState, useRef } from "react";
 import CategoryDropdown from "./CategoryDropdown";
 
 const NavBar = () => {
+  const [showDropdown, setShowDropdown] = useState(false);
+  const timeoutRef = useRef<number | null>(null);
+
+  const handleMouseEnter = () => {
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+    }
+    setShowDropdown(true);
+  };
+
+  const handleMouseLeave = () => {
+    // Delay 300ms trước khi ẩn dropdown để user có thể di chuyển chuột
+    timeoutRef.current = setTimeout(() => {
+      setShowDropdown(false);
+    }, 300);
+  };
+
   return (
     <nav className="text-sm">
       <div className="container mx-auto flex items-center justify-between py-2">
         {/* Left Side - Menu chính */}
         <div className="flex items-center space-x-4">
           {/* Dropdown Menu */}
-          <div className="relative group text-white">
+          <div 
+            className="relative text-white"
+            onMouseEnter={handleMouseEnter}
+            onMouseLeave={handleMouseLeave}
+          >
             <button className="bg-blue-700 px-2 py-2 rounded flex items-center gap-2 hover:bg-blue-800 transition-colors">
               <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
                 <path
@@ -21,7 +43,7 @@ const NavBar = () => {
             </button>
 
             {/* Dropdown content*/}
-            <CategoryDropdown isVisible={false} />
+            <CategoryDropdown isVisible={showDropdown} />
           </div>
 
           {/* Navigation Links */}
