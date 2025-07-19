@@ -1,132 +1,266 @@
-import { useState } from 'react';
-import ProductGrid from './ProductGrid';
-import { sampleProducts } from '../../data/sampleProducts';
-import type { Product } from '../../types/Product';
-import FilterSidebar from '../filter/FilterSideBar';
+import { useCallback, useEffect, useState } from "react";
+import ProductGrid from "./ProductGrid";
+import { sampleProducts } from "../../data/sampleProducts";
+import type { Product } from "../../types/Product";
+import FilterSidebar from "../filter/FilterSideBar";
+import ProductFilter from "./ProductFilter";
 
-const ProductListing = () => {
-  const [filteredProducts, setFilteredProducts] = useState<Product[]>(sampleProducts);
+type ProductListingProps = {
+  onSortChange: () => void;
+  onFilterChange: () => void;
+};
+
+const ProductListing: React.FC<ProductListingProps> = () => {
   const [loading, setLoading] = useState(false);
-  const [sortBy, setSortBy] = useState('default');
+  const [allProducts, setAllProducts] = useState<Product[]>([]);
+  const [sortBy, setSortBy] = useState("default");
+  const [hasMore, setHasMore] = useState(true);
+  const [displayedProducts, setDisplayedProducts] = useState<Product[]>([]);
+  const [page, setPage] = useState(1);
 
-  const handleFilterChange = (filters: any) => {
+  const PAGE_SIZE = 8;
+
+  const loadMore = useCallback(() => {
+    if (!hasMore || loading || allProducts.length === 0) return;
+
     setLoading(true);
-    
-    // Simulate API call
     setTimeout(() => {
-      // Apply filters logic here
-      let filtered = [...sampleProducts];
-      
-      // Example filter logic
-      const selectedCategories = filters.categories
-        ?.find((cat: any) => cat.id === 'categories')
-        ?.options?.filter((opt: any) => opt.checked)
-        ?.map((opt: any) => opt.id) || [];
+      const start = (page - 1) * PAGE_SIZE;
+      const end = start + PAGE_SIZE;
+      const newProducts = allProducts.slice(start, end);
 
-      if (selectedCategories.length > 0) {
-        // Filter by selected categories
-        // This is just example logic - implement based on your data structure
+      if (newProducts.length === 0) {
+        setHasMore(false);
+      } else {
+        setDisplayedProducts((prev) => [...prev, ...newProducts]);
+        setHasMore(end < allProducts.length);
+        setPage((prev) => prev + 1);
       }
-
-      setFilteredProducts(filtered);
       setLoading(false);
     }, 500);
+  }, [page, allProducts, hasMore, loading]);
+
+  // Khởi tạo allProducts
+  useEffect(() => {
+    setAllProducts(sampleProducts);
+  }, []);
+
+  // Auto load khi allProducts thay đổi
+  useEffect(() => {
+    if (allProducts.length > 0 && displayedProducts.length === 0) {
+      loadMore();
+    }
+  }, [allProducts, displayedProducts.length, loadMore]);
+
+  // Infinite scroll listener
+  useEffect(() => {
+    if (!hasMore || loading) return;
+
+    const handleScroll = () => {
+      if (
+        window.innerHeight + window.scrollY >=
+        document.body.offsetHeight - 400
+      ) {
+        loadMore();
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [loading, hasMore, loadMore]);
+
+  const handleFilterChange = (filters: any) => {
+    console.log("Filters received:", filters); // Debug log
+
+    let filtered = [...sampleProducts];
+
+    // Filter by categories
+    if (filters.categories) {
+      const categoryFilter = filters.categories.find(
+        (cat: any) => cat.id === "categories"
+      );
+      const selectedCategories =
+        categoryFilter?.options
+          ?.filter((opt: any) => opt.checked)
+          ?.map((opt: any) => opt.id) || [];
+
+      if (selectedCategories.length > 0) {
+        filtered = filtered.filter((product) =>
+          selectedCategories.includes(product.category)
+        );
+      }
+    }
+
+    // Filter by brands
+    if (filters.categories) {
+      const brandFilter = filters.categories.find(
+        (cat: any) => cat.id === "brands"
+      );
+      const selectedBrands =
+        brandFilter?.options
+          ?.filter((opt: any) => opt.checked)
+          ?.map((opt: any) => opt.id) || [];
+
+      if (selectedBrands.length > 0) {
+        filtered = filtered.filter((product) =>
+          selectedBrands.includes(product.brand)
+        );
+      }
+    }
+
+    // Filter by years
+    if (filters.categories) {
+      const yearFilter = filters.categories.find(
+        (cat: any) => cat.id === "years"
+      );
+      const selectedYears =
+        yearFilter?.options
+          ?.filter((opt: any) => opt.checked)
+          ?.map((opt: any) => opt.id) || [];
+
+      if (selectedYears.length > 0) {
+        filtered = filtered.filter((product) =>
+          selectedYears.includes(product.year)
+        );
+      }
+    }
+
+    // Filter by origins
+    if (filters.categories) {
+      const originFilter = filters.categories.find(
+        (cat: any) => cat.id === "origins"
+      );
+      const selectedOrigins =
+        originFilter?.options
+          ?.filter((opt: any) => opt.checked)
+          ?.map((opt: any) => opt.id) || [];
+
+      if (selectedOrigins.length > 0) {
+        filtered = filtered.filter((product) =>
+          selectedOrigins.includes(product.origin)
+        );
+      }
+    }
+
+    // Filter by price range
+    if (filters.selectedPriceRange) {
+      switch (filters.selectedPriceRange) {
+        case "under-100k":
+          filtered = filtered.filter((product) => product.salePrice < 100000);
+          break;
+        case "100k-300k":
+          filtered = filtered.filter(
+            (product) =>
+              product.salePrice >= 100000 && product.salePrice <= 300000
+          );
+          break;
+        case "300k-500k":
+          filtered = filtered.filter(
+            (product) =>
+              product.salePrice >= 300000 && product.salePrice <= 500000
+          );
+          break;
+        case "over-500k":
+          filtered = filtered.filter((product) => product.salePrice > 500000);
+          break;
+      }
+    }
+
+    console.log("Filtered products:", filtered); // Debug log
+
+    // Apply current sort to filtered results
+    if (sortBy !== "default") {
+      switch (sortBy) {
+        case "price-asc":
+          filtered.sort((a, b) => a.salePrice - b.salePrice);
+          break;
+        case "price-desc":
+          filtered.sort((a, b) => b.salePrice - a.salePrice);
+          break;
+        case "name-asc":
+          filtered.sort((a, b) => a.name.localeCompare(b.name));
+          break;
+      }
+    }
+
+    setAllProducts(filtered);
+    setDisplayedProducts([]);
+    setPage(1);
+    setHasMore(true);
   };
 
   const handleSortChange = (sortValue: string) => {
     setSortBy(sortValue);
-    let sorted = [...filteredProducts];
-    
+    let sorted = [...sampleProducts];
+
     switch (sortValue) {
-      case 'price-asc':
+      case "price-asc":
         sorted.sort((a, b) => a.salePrice - b.salePrice);
         break;
-      case 'price-desc':
+      case "price-desc":
         sorted.sort((a, b) => b.salePrice - a.salePrice);
         break;
-      case 'name-asc':
+      case "name-asc":
         sorted.sort((a, b) => a.name.localeCompare(b.name));
         break;
-      case 'newest':
-        // Sort by newest (you'd need a date field)
-        break;
       default:
-        // Default sorting
+        sorted = [...sampleProducts];
         break;
     }
-    
-    setFilteredProducts(sorted);
+
+    setAllProducts(sorted);
+    setDisplayedProducts([]);
+    setPage(1);
+    setHasMore(true);
   };
 
   const handleQuickBuy = (productId: string) => {
-    console.log('Quick buy:', productId);
+    console.log("Quick buy:", productId);
   };
 
   return (
     <div className="">
       <div className="container mx-auto py-6">
         <div className="flex gap-8">
-          {/* Sidebar Filter */}
           <div className="flex-shrink-0">
             <FilterSidebar onFilterChange={handleFilterChange} />
           </div>
 
-          {/* Main Content */}
           <div className="flex-1">
-            {/* Header */}
             <div className="rounded-lg mb-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <h1 className="text-xl font-bold text-gray-900 mb-2">Danh sách sản phẩm</h1>
+                  <h1 className="text-xl font-bold text-gray-900 mb-2">
+                    Danh sách sản phẩm
+                  </h1>
                 </div>
 
-                {/* Sort Dropdown */}
                 <div className="flex items-center gap-4">
-                  <span className="text-sm text-gray-600">Sắp xếp theo:</span>
-                  <select
-                    value={sortBy}
-                    onChange={(e) => handleSortChange(e.target.value)}
-                    className="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                  >
-                    <option value="default">Liên quan</option>
-                    <option value="price-asc">Giá: Thấp đến Cao</option>
-                    <option value="price-desc">Giá: Cao đến Thấp</option>
-                    <option value="name-asc">Tên: A-Z</option>
-                    <option value="newest">Mới nhất</option>
-                  </select>
-
-                  {/* View Toggle */}
-                  <div className="flex items-center gap-2 ml-4">
-                    <span className="text-sm text-gray-600">Bán chạy</span>
-                    <span className="text-sm text-gray-600">Mới nhất</span>
-                    <span className="text-sm text-gray-600">Nổi bật</span>
-                    <span className="text-sm text-blue-600 font-medium">Giá Thấp - Cao</span>
-                  </div>
+                  <span className="text-sm text-gray-600">Sắp xếp theo</span>
+                  <ProductFilter
+                    onSortChange={handleSortChange}
+                    onFilterChange={handleFilterChange}
+                  />
                 </div>
               </div>
             </div>
 
-            {/* Product Grid */}
+            {/* Sửa thành displayedProducts */}
             <ProductGrid
-              products={filteredProducts}
-              loading={loading}
+              products={displayedProducts}
+              loading={false}
               onQuickBuy={handleQuickBuy}
             />
 
-            {/* Pagination */}
-            <div className="flex justify-center mt-8">
-              <div className="flex items-center gap-2">
-                <button className="px-3 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50">
-                  ←
-                </button>
-                <button className="px-3 py-2 bg-blue-600 text-white rounded-lg">1</button>
-                <button className="px-3 py-2 border border-gray-300 rounded-lg hover:bg-gray-50">2</button>
-                <button className="px-3 py-2 border border-gray-300 rounded-lg hover:bg-gray-50">3</button>
-                <button className="px-3 py-2 border border-gray-300 rounded-lg hover:bg-gray-50">
-                  →
-                </button>
+            {/* Loading states */}
+            {loading && (
+              <div className="text-center py-6">Đang tải thêm...</div>
+            )}
+            {!hasMore && displayedProducts.length > 0 && (
+              <div className="text-center py-6 text-gray-400">
+                Đã tải hết sản phẩm
               </div>
-            </div>
+            )}
           </div>
         </div>
       </div>

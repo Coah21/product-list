@@ -6,5 +6,9 @@ export interface Product {
   salePrice: number;
   discount: number;
   isHotDeal?: boolean;
+  category: string;
+  brand: string;
+  year: string;
+  origin: string;
 }
 
