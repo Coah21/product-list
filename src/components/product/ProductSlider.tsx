@@ -89,7 +89,7 @@ const ProductSlider = ({
               },
             }}
             // Events
-            onSlideChange={(swiper) => {
+            onSlideChange={() => {
               // console.log('Slide changed to:', swiper.activeIndex);
             }}
             className="product-swiper"
