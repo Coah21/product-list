@@ -1,3 +1,5 @@
+import CategoryDropdown from "./CategoryDropdown";
+
 const NavBar = () => {
   return (
     <nav className="text-sm">
@@ -19,40 +21,7 @@ const NavBar = () => {
             </button>
 
             {/* Dropdown content*/}
-            <div className="absolute top-full left-0 mt-1 w-64 bg-white shadow-lg rounded-md opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
-              <div className="py-2">
-                <a
-                  href="#"
-                  className="block px-4 py-2 text-gray-800 hover:bg-blue-50 hover:text-blue-600"
-                >
-                  Lọc Dầu Động Cơ
-                </a>
-                <a
-                  href="#"
-                  className="block px-4 py-2 text-gray-800 hover:bg-blue-50 hover:text-blue-600"
-                >
-                  Lọc Khí
-                </a>
-                <a
-                  href="#"
-                  className="block px-4 py-2 text-gray-800 hover:bg-blue-50 hover:text-blue-600"
-                >
-                  Lọc Nhiên Liệu
-                </a>
-                <a
-                  href="#"
-                  className="block px-4 py-2 text-gray-800 hover:bg-blue-50 hover:text-blue-600"
-                >
-                  Lọc Nước
-                </a>
-                <a
-                  href="#"
-                  className="block px-4 py-2 text-gray-800 hover:bg-blue-50 hover:text-blue-600"
-                >
-                  Phụ Kiện Ô Tô
-                </a>
-              </div>
-            </div>
+            <CategoryDropdown isVisible={false} />
           </div>
 
           {/* Navigation Links */}

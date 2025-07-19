@@ -1,6 +1,21 @@
 const Footer = () => {
+  // const scrollToTop = () => {
+  //   window.scrollTo({
+  //     top: 0,
+  //     behavior: "smooth",
+  //   });
+  // };
+
   return (
-    <footer className="bg-gray-100">
+    <footer
+      className="bg-gray-100"
+      style={{
+        backgroundImage: "url('../../image/footerbackground.jpg')",
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundRepeat: "no-repeat",
+      }}
+    >
       {/* Main Footer Content */}
       <div className="py-12">
         <div className="container mx-auto">

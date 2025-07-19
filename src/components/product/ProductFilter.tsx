@@ -5,66 +5,56 @@ interface ProductFilterProps {
   onFilterChange: (filter: string) => void;
 }
 
-const ProductFilter = ({
-  onSortChange,
-}: ProductFilterProps) => {
+const ProductFilter = ({ onSortChange }: ProductFilterProps) => {
   const [activeSort, setActiveSort] = useState("relevant");
   const [showPriceDropdown, setShowPriceDropdown] = useState(false);
 
   const handleSortClick = (sortValue: string) => {
     if (sortValue === "price-dropdown") {
-      setShowPriceDropdown(!showPriceDropdown);
+      setShowPriceDropdown((prev) => !prev);
+      return;
+    }
+
+    if (sortValue === "price-asc" || sortValue === "price-desc") {
+      setActiveSort(sortValue);
+      onSortChange(sortValue);
+      setShowPriceDropdown(false);
       return;
     }
 
     setActiveSort(sortValue);
-
-    let actualSortValue = sortValue;
-    switch (sortValue) {
-      case "relevant":
-        actualSortValue = "default";
-        break;
-      case "bestseller":
-        actualSortValue = "default"; // hoặc tạo logic riêng cho bestseller
-        break;
-      case "newest":
-        actualSortValue = "default"; // hoặc tạo logic riêng cho newest
-        break;
-      case "popular":
-        actualSortValue = "default"; // hoặc tạo logic riêng cho popular
-        break;
-      // price-asc và price-desc giữ nguyên
-    }
+    let actualSortValue = "default";
     onSortChange(actualSortValue);
     setShowPriceDropdown(false);
   };
 
-  // Close dropdown when clicking outside
   useEffect(() => {
-    const handleClickOutside = () => {
-      if (showPriceDropdown) {
-        setShowPriceDropdown(false);
-      }
-    };
+  const handleClickOutside = () => {
+    setShowPriceDropdown(false);
+  };
 
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [showPriceDropdown]);
+  if (showPriceDropdown) {
+    setTimeout(() => {
+    }, 0);
+  }
+
+  return () => {
+    document.removeEventListener("click", handleClickOutside);
+  };
+}, [showPriceDropdown]);
 
   return (
     <div className="">
-      <div className="container mx-auto px-4">
+      <div className="container mx-auto">
         <div className="flex items-center justify-between py-4">
           {/* Right side - Sort Buttons */}
           <div className="flex items-center gap-2">
             <button
               onClick={() => handleSortClick("relevant")}
-              className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 border ${
+              className={`px-4 py-2 rounded-xl text-sm font-medium transition-all duration-200 border ${
                 activeSort === "relevant"
-                  ? "bg-blue-600 text-white border-blue-600"
-                  : "text-gray-600 border-gray-300 hover:text-gray-900 hover:bg-gray-50 hover:border-gray-400"
+                  ? "bg-white text-black border-blue-600"
+                  : "bg-white border-gray-300 hover:text-gray-900 hover:bg-gray-50 hover:border-gray-400"
               }`}
             >
               Liên quan
@@ -73,10 +63,10 @@ const ProductFilter = ({
             {/* Bán chạy Button */}
             <button
               onClick={() => handleSortClick("bestseller")}
-              className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 border ${
+              className={`px-4 py-2 rounded-xl text-sm font-medium transition-all duration-200 border ${
                 activeSort === "bestseller"
-                  ? "bg-blue-600 text-white border-blue-600"
-                  : "text-gray-600 border-gray-300 hover:text-gray-900 hover:bg-gray-50 hover:border-gray-400"
+                  ? "bg-white text-black border-blue-600"
+                  : "bg-white border-gray-300 hover:text-gray-900 hover:bg-gray-50 hover:border-gray-400"
               }`}
             >
               Bán chạy
@@ -85,10 +75,10 @@ const ProductFilter = ({
             {/* Mới nhất Button */}
             <button
               onClick={() => handleSortClick("newest")}
-              className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 border ${
+              className={`px-4 py-2 rounded-xl text-sm font-medium transition-all duration-200 border ${
                 activeSort === "newest"
-                  ? "bg-blue-600 text-white border-blue-600"
-                  : "text-gray-600 border-gray-300 hover:text-gray-900 hover:bg-gray-50 hover:border-gray-400"
+                  ? "bg-white text-black border-blue-600"
+                  : "bg-white border-gray-300 hover:text-gray-900 hover:bg-gray-50 hover:border-gray-400"
               }`}
             >
               Mới nhất
@@ -97,10 +87,10 @@ const ProductFilter = ({
             {/* Nổi bật Button */}
             <button
               onClick={() => handleSortClick("popular")}
-              className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 border ${
+              className={`px-4 py-2 rounded-xl text-sm font-medium transition-all duration-200 border ${
                 activeSort === "popular"
-                  ? "bg-blue-600 text-white border-blue-600"
-                  : "text-gray-600 border-gray-300 hover:text-gray-900 hover:bg-gray-50 hover:border-gray-400"
+                  ? "bg-white text-black border-blue-600"
+                  : "bg-white border-gray-300 hover:text-gray-900 hover:bg-gray-50 hover:border-gray-400"
               }`}
             >
               Nổi bật
@@ -110,10 +100,10 @@ const ProductFilter = ({
             <div className="relative">
               <button
                 onClick={() => handleSortClick("price-dropdown")}
-                className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 flex items-center gap-2 border ${
+                className={`px-4 py-2 text-sm font-medium transition-all duration-200 flex items-center gap-2  ${
                   activeSort.includes("price")
-                    ? "bg-blue-600 text-white border-blue-600"
-                    : "text-gray-600 border-gray-300 hover:text-gray-900 hover:bg-gray-50 hover:border-gray-400"
+                    ? "text-black"
+                    : "hover:text-gray-900 "
                 }`}
               >
                 <span>
