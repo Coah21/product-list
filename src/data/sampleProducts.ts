@@ -1,0 +1,58 @@
+import type { Product } from "../types/Product";
+
+export const sampleProducts: Product[] = [
+  {
+    id: "1",
+    name: "Lọc gió động cơ Air Filter - Chevrolet Colorado, Trailblazer",
+    image: "../image/Img_Product_M.1.png",
+    originalPrice: 329000,
+    salePrice: 299000,
+    discount: 10,
+    isHotDeal: true,
+  },
+  {
+    id: "2",
+    name: "Lọc dầu động cơ Oil Filter - Honda Civic, CR-V",
+    image: "../image/Img_Product_M.1.png",
+    originalPrice: 450000,
+    salePrice: 380000,
+    discount: 15,
+    isHotDeal: true,
+  },
+  {
+    id: "3",
+    name: "Lọc gió động cơ Air Filter - Chevrolet Colorado, Trailblazer",
+    image: "../image/Img_Product_M.1.png",
+    originalPrice: 329000,
+    salePrice: 299000,
+    discount: 10,
+    isHotDeal: true,
+  },
+  {
+    id: "4",
+    name: "Lọc dầu động cơ Oil Filter - Honda Civic, CR-V",
+    image: "../image/Img_Product_M.1.png",
+    originalPrice: 450000,
+    salePrice: 380000,
+    discount: 15,
+    isHotDeal: true,
+  },
+  {
+    id: "5",
+    name: "Lọc gió động cơ Air Filter - Chevrolet Colorado, Trailblazer",
+    image: "../image/Img_Product_M.1.png",
+    originalPrice: 329000,
+    salePrice: 299000,
+    discount: 10,
+    isHotDeal: true,
+  },
+  {
+    id: "6",
+    name: "Lọc dầu động cơ Oil Filter - Honda Civic, CR-V",
+    image: "../image/Img_Product_M.1.png",
+    originalPrice: 450000,
+    salePrice: 380000,
+    discount: 15,
+    isHotDeal: true,
+  },
+];

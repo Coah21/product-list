@@ -1,6 +1,6 @@
 const NavBar = () => {
   return (
-    <nav className="py-3 text-sm">
+    <nav className="text-sm">
       <div className="container mx-auto flex items-center justify-between">
         {/* Left Side - Menu chính */}
         <div className="flex items-center space-x-4">
